@@ -757,6 +757,60 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!1 &1364885312
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1364885314}
+  - component: {fileID: 1364885313}
+  m_Layer: 0
+  m_Name: Spawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1364885313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1364885312}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f272278a1dd2428284ce33d95db0530, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Spawner
+  rockDrop: {fileID: 1418044517}
+  lilyPadPrefab: {fileID: 1023148897728987358, guid: 0054532c7378c47839a8ca6dfc29c855, type: 3}
+  lilyPadSpawnChance: 0.7
+  minBouncesBetweenSpawns: 4
+  spawnArea:
+    serializedVersion: 2
+    x: 30
+    y: 0
+    width: 10
+    height: 20
+--- !u!4 &1364885314
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1364885312}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -14.78643, y: 0, z: 18.41368}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1418044511
 GameObject:
   m_ObjectHideFlags: 0
@@ -941,6 +995,9 @@ MonoBehaviour:
   barHeight: 24
   barBottomMargin: 65
   barDisplayWindow: 1
+  currentMaxHeight: 0
+  speedMultiplier: 1
+  hasClicked: 0
 --- !u!1 &1583920052
 GameObject:
   m_ObjectHideFlags: 0
@@ -1090,6 +1147,7 @@ SceneRoots:
   - {fileID: 514959669}
   - {fileID: 642443378}
   - {fileID: 1418044514}
+  - {fileID: 1820726870}
   - {fileID: 189812440}
   - {fileID: 1583920053}
-  - {fileID: 1820726870}
+  - {fileID: 1364885314}

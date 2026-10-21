@@ -54,8 +54,8 @@ public class RockDrop : MonoBehaviour
 
     private float verticalSpeed;
     private float contactY;
-    private float currentMaxHeight;
-    private float speedMultiplier = 1f;
+    public float currentMaxHeight;
+    public float speedMultiplier = 1f;
     private float lockedX;
 
     private int totalBounces;
@@ -69,7 +69,13 @@ public class RockDrop : MonoBehaviour
     }
 
     private TimingResult recordedTiming = TimingResult.None;
-    private bool hasClicked;
+    public bool hasClicked;
+
+    /// <summary>
+    /// Fired when the rock touches the water, before the bounce height
+    /// is calculated. Passes the rock's position at impact.
+    /// </summary>
+    public event System.Action<Vector3> Bounced;
 
     private string feedbackText = "";
     private Color feedbackColor = Color.white;
@@ -205,21 +211,26 @@ public class RockDrop : MonoBehaviour
             1f + totalBounces * speedIncreasePerBounce
         );
 
-        currentMaxHeight -= heightLossPerBounce;
+        Bounced?.Invoke(transform.position);
 
-        currentMaxHeight = Mathf.Clamp(
-            currentMaxHeight,
-            minimumMaxHeight,
-            absoluteMaxHeight
+        // No clamping from above in case of a bonus for maxHeight.
+        currentMaxHeight = Mathf.Max(
+            currentMaxHeight - heightLossPerBounce,
+            minimumMaxHeight
         );
 
         float targetHeight = currentMaxHeight;
 
         if (recordedTiming == TimingResult.Perfect)
         {
-            currentMaxHeight = Mathf.Min(
-                currentMaxHeight + perfectHeightBonus,
-                absoluteMaxHeight
+            // If maxHeight is already above limit, don't clamp down to keep
+            // the bonus maxHeight.
+            currentMaxHeight = Mathf.Max(
+                currentMaxHeight,
+                Mathf.Min(
+                    currentMaxHeight + perfectHeightBonus,
+                    absoluteMaxHeight
+                )
             );
 
             targetHeight = currentMaxHeight;

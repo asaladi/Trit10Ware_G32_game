@@ -35,11 +35,11 @@ public class RockShadow : MonoBehaviour
 
         float scale = Mathf.Lerp(maxScale, minScale, t);
 
-      transform.localScale = new Vector3(
-    scale * 1.2f,
-    scale * 0.65f,
-    1f
-);
+        transform.localScale = new Vector3(
+            scale * 1.2f,
+            scale * 0.65f,
+            1f
+        );
 
         if (spriteRenderer != null)
         {

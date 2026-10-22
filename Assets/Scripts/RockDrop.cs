@@ -1,6 +1,7 @@
-
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
+using System.Collections;
 
 public class RockDrop : MonoBehaviour
 {
@@ -45,6 +46,9 @@ public class RockDrop : MonoBehaviour
 
     [Header("Feedback")]
     public float feedbackDuration = 0.7f;
+    /// In order from perfect to bad.
+    public Sprite[] feedbackSprites;
+    public Image feedbackImage;
 
     [Header("Timing Bar UI")]
     public float barWidth = 400f;
@@ -77,9 +81,7 @@ public class RockDrop : MonoBehaviour
     /// </summary>
     public event System.Action<Vector3> Bounced;
 
-    private string feedbackText = "";
     private Color feedbackColor = Color.white;
-    private float feedbackUntil;
 
     private Texture2D whiteTexture;
 
@@ -234,22 +236,19 @@ public class RockDrop : MonoBehaviour
             );
 
             targetHeight = currentMaxHeight;
-            ShowFeedback("PERFECT!", Color.green);
         }
         else if (recordedTiming == TimingResult.Great)
         {
             targetHeight =
                 currentMaxHeight * greatHeightMultiplier;
-
-            ShowFeedback("GREAT!", Color.yellow);
         }
         else
         {
             targetHeight =
                 currentMaxHeight * missHeightMultiplier;
-
-            ShowFeedback("MISS!", Color.red);
         }
+
+        ShowFeedback();
 
         verticalSpeed = CalculateBounceVelocity(targetHeight);
 
@@ -295,11 +294,36 @@ public class RockDrop : MonoBehaviour
         return height;
     }
 
-    void ShowFeedback(string message, Color color)
+    float SimulateBounceDuration(float startSpeed)
     {
-        feedbackText = message;
-        feedbackColor = color;
-        feedbackUntil = Time.time + feedbackDuration;
+        float height = 0f;
+        float speed = startSpeed;
+
+        const float step = 0.005f;
+
+        for (int i = 0; i < 4000; i++)
+        {
+            speed -= GetCurrentGravity(speed) * step;
+
+            if (height <= 0f)
+                return i * step;
+
+            height += speed * step;
+        }
+
+        return 1f;
+    }
+
+    void ShowFeedback()
+    {
+        feedbackImage.sprite = feedbackSprites[(int) recordedTiming];
+        feedbackImage.enabled = true;
+        StartCoroutine(HideFeedback(feedbackDuration));
+    }
+
+    IEnumerator HideFeedback(float duration) {
+        yield return new WaitForSeconds(duration);
+        feedbackImage.enabled = false;
     }
 
     void RestartGame()
@@ -319,9 +343,6 @@ public class RockDrop : MonoBehaviour
         totalBounces = 0;
         recordedTiming = TimingResult.None;
         hasClicked = false;
-
-        feedbackText = "";
-        feedbackUntil = 0f;
     }
 
     void DrawRect(Rect rect, Color color)
@@ -412,7 +433,7 @@ public class RockDrop : MonoBehaviour
         GUIStyle style = new GUIStyle(GUI.skin.label);
         style.fontSize = 22;
         style.fontStyle = FontStyle.Bold;
-        style.normal.textColor = Color.white;
+        style.normal.textColor = Color.black;
 
         GUI.Label(
             new Rect(20, 20, 350, 35),
@@ -433,27 +454,5 @@ public class RockDrop : MonoBehaviour
         );
 
         DrawTimingBar();
-
-        if (Time.time < feedbackUntil)
-        {
-            GUIStyle feedbackStyle =
-                new GUIStyle(GUI.skin.label);
-
-            feedbackStyle.fontSize = 36;
-            feedbackStyle.fontStyle = FontStyle.Bold;
-            feedbackStyle.alignment = TextAnchor.MiddleCenter;
-            feedbackStyle.normal.textColor = feedbackColor;
-
-            GUI.Label(
-                new Rect(
-                    Screen.width / 2f - 200,
-                    65,
-                    400,
-                    60
-                ),
-                feedbackText,
-                feedbackStyle
-            );
-        }
     }
 }

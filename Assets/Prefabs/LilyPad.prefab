@@ -106,7 +106,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LilyPad
   rockDrop: {fileID: 0}
   despawnXLimit: -30
-  maxHeightBonus: 0.5
-  absoluteMaxHeightIncrease: 0.5
+  maxHeightBonus: 0.8
+  absoluteMaxHeightIncrease: 0.8
   duration: 5
   activationRadius: 2
